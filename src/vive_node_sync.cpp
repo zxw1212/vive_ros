@@ -490,7 +490,7 @@ VIVEnode::VIVEnode(int rate)
   feedback_sub_ = nh_.subscribe("/vive/set_feedback", 10, &VIVEnode::set_feedback, this);
 
 #ifdef USE_IMAGE
-  image_transport::ImageTransport it(nh_);
+  //image_transport::ImageTransport it(nh_);
   sub_L = nh_.subscribe("image_left", 1, &VIVEnode::imageCb_L, this);
   sub_R = nh_.subscribe("image_right", 1, &VIVEnode::imageCb_R, this);
   sub_i_L = nh_.subscribe("camera_info_left", 1, &VIVEnode::infoCb_L, this);

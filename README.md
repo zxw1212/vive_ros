@@ -154,7 +154,11 @@
 
 2. Plug-in and turn on the HTC Vive HMD
 
-3. Start Steam and SteamVR:
+3. Run the following commands in the terminal to give read/write permission for HTC Vive 
+   ```sh
+    $ sudo chmod a+rw /dev/hidraw*
+   ```
+4. Start Steam and SteamVR:
    
    Open a new terminal and run
    
@@ -162,11 +166,11 @@
     $ steam
    ```
    
-4. Start SteamVR from Steam client
+5. Start SteamVR from Steam client
 
-5. Check if the HMD is inside the point of view of the stations and it is tracked by the stations
+6. Check if the HMD is inside the point of view of the stations and it is tracked by the stations
 
-6. Pair the HTC Joypads, check if they are tracked by the stations
+7. Pair the HTC Joypads, check if they are tracked by the stations
 
 ## Launch ROS nodes:
 

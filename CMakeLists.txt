@@ -110,23 +110,5 @@ target_link_libraries(vive_node
   ${EXTRA_LIBS}
 )
 
-# VIVE node:
-add_executable(vive_sync
-  ${SHARED_SRC_FILES}
-  src/vive_node_sync.cpp
-  src/vr_interface.cpp
-)
-
-## link all
-target_link_libraries(vive_sync
-  ${catkin_LIBRARIES}
-  ${OPENGL_LIBRARIES} ## (OpenGL specific)
-  ${GLEW_LIBRARIES} ## (OpenGL specific)
-  ${VULKAN_LIBRARY} ## (Vulkan specific)
-  ${SDL2_LIBRARIES}
-  ${OPENVR_LIBRARIES}
-  ${CMAKE_DL_LIBS}
-  ${EXTRA_LIBS}
-)
 
 

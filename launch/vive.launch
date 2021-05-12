@@ -37,6 +37,10 @@
     args="hmd world 30"
     output="log"/>
 
+  <!--<node name="robot_pilot_audio"
+    pkg="audio_play"
+    type="stereo_play"
+    output="log"/>-->
 </launch>
 
 

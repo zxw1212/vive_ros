@@ -1,13 +1,16 @@
 
 #include <cmath>
+
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
+#include <std_srvs/Empty.h>
 #include <sensor_msgs/Joy.h>
 #include <sensor_msgs/JoyFeedback.h>
-#include <std_srvs/Empty.h>
-#include "vive_ros/vr_interface.h"
+#include <tf/transform_listener.h>
+#include <tf/transform_broadcaster.h>
+
 #include <opencv2/imgcodecs.hpp>
+#include "vive_ros/vr_interface.h"
+
 
 void handleDebugMessages(const std::string &msg) {ROS_DEBUG(" [VIVE] %s",msg.c_str());}
 void handleInfoMessages(const std::string &msg) {ROS_INFO(" [VIVE] %s",msg.c_str());}
@@ -457,7 +460,6 @@ class VIVEnode
     void infoCb_L(const sensor_msgs::CameraInfoConstPtr& msg);
     void infoCb_R(const sensor_msgs::CameraInfoConstPtr& msg);
     CMainApplicationMod *pMainApplication;
-    //image_transport::Subscriber sub_L,sub_R;
     ros::Subscriber sub_L,sub_R;
     ros::Subscriber sub_i_L,sub_i_R;
 #endif
@@ -491,10 +493,10 @@ VIVEnode::VIVEnode(int rate)
 
 #ifdef USE_IMAGE
   image_transport::ImageTransport it(nh_);
-  sub_L = nh_.subscribe("image_left", 1, &VIVEnode::imageCb_L, this);
-  sub_R = nh_.subscribe("image_right", 1, &VIVEnode::imageCb_R, this);
-  sub_i_L = nh_.subscribe("camera_info_left", 1, &VIVEnode::infoCb_L, this);
-  sub_i_R = nh_.subscribe("camera_info_right", 1, &VIVEnode::infoCb_R, this);
+  sub_L = nh_.subscribe("image_left", 1, &VIVEnode::imageCb_L, this, ros::TransportHints().udp());
+  sub_R = nh_.subscribe("image_right", 1, &VIVEnode::imageCb_R, this, ros::TransportHints().udp());
+  sub_i_L = nh_.subscribe("camera_info_left", 1, &VIVEnode::infoCb_L, this, ros::TransportHints().udp());
+  sub_i_R = nh_.subscribe("camera_info_right", 1, &VIVEnode::infoCb_R, this, ros::TransportHints().udp());
   pMainApplication = new CMainApplicationMod( 1, NULL );
   if (!pMainApplication->BInit()){
     pMainApplication->Shutdown();
@@ -738,6 +740,8 @@ void VIVEnode::infoCb_L(const sensor_msgs::CameraInfoConstPtr& msg){
     pMainApplication->cam_f[L][0] = msg->K[0];
     pMainApplication->cam_f[L][1] = msg->K[4];
   }else{
+    // pMainApplication->cam_f[L][0] = 
+    // pMainApplication->cam_f[L][0] = 
     ROS_WARN_THROTTLE(3, "Invalid camera_info_left fov (%fx%f) use default", msg->K[0], msg->K[4]);
   }
 }
@@ -747,6 +751,8 @@ void VIVEnode::infoCb_R(const sensor_msgs::CameraInfoConstPtr& msg){
     pMainApplication->cam_f[R][0] = msg->K[0];
     pMainApplication->cam_f[R][1] = msg->K[4];
   }else{
+    // pMainApplication->cam_f[L][0] = 
+    // pMainApplication->cam_f[L][0] = 
     ROS_WARN_THROTTLE(3, "Invalid camera_info_right fov (%fx%f) use default", msg->K[0], msg->K[4]);
   }
 }

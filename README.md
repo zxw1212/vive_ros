@@ -98,6 +98,7 @@
        ```
     9. #### Install additional ROS libraries
        ```sh 
+       $ sudo apt-get install -y libglew-dev
        $ sudo apt-get install ros-melodic-tf -y
        $ sudo apt-get install ros-melodic-tf2* -y
        ``` 

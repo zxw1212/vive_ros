@@ -114,7 +114,12 @@
        $ cd ~/catkin_ws/src/vive_ros
        $ sudo cp ./60-HTC-Vive-perms.rules /etc/udev/rules.d
        $ sudo udevadm control --reload-rules && sudo udevadm trigger
+       $ sudo chmod 777 -R ./scripts
        ```               
+   10. #### Check steam runtime path in the vive_framework.launch
+       usually is : ```~/.steam/ubuntu12_32/steam_runtime/run.sh```,
+       but can be ```~/.steam/steam/ubuntu12_32/steam_runtime/run.sh```
+       
 - ### Steam and SteamVR installation:
     1. #### Download [Steam](https://store.steampowered.com) latest version. You should get the file steam_latest.deb in your ~/Downloads folder
     2. #### Run Steam 

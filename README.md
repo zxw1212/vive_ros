@@ -104,7 +104,7 @@
     9. #### Install `vive_ros` package in the catkin_ws
        ```sh 
        $ cd ~/catkin_ws/src
-       $ git clone https://github.com/CentroEPiaggio/vive_ros.git
+       $ git clone https://github.com/JOiiNT-LAB/vive_ros.git
        $ cd ..
        $ catkin_make
        ```

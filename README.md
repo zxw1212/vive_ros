@@ -120,7 +120,9 @@
    10. #### Check steam runtime path in the vive_framework.launch
        usually is : ```~/.steam/ubuntu12_32/steam_runtime/run.sh```,
        but can be ```~/.steam/steam/ubuntu12_32/steam_runtime/run.sh```
-       
+   11. #### If error 307 occurred
+       ```sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled```
+       (https://github.com/ValveSoftware/SteamVR-for-Linux/issues/355)
 - ### Steam and SteamVR installation:
     1. #### Download [Steam](https://store.steampowered.com) latest version. You should get the file steam_latest.deb in your ~/Downloads folder
     2. #### Run Steam 

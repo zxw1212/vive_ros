@@ -115,7 +115,7 @@
        $ sudo cp ./60-HTC-Vive-perms.rules /etc/udev/rules.d
        $ sudo udevadm control --reload-rules && sudo udevadm trigger
        $ sudo chmod 777 -R ./scripts
-       sudo chmod 777 -R ./.ros/rosdep/sources.cache
+       sudo chmod 777 -R ~/.ros/rosdep/sources.cache
        ```               
    10. #### Check steam runtime path in the vive_framework.launch
        usually is : ```~/.steam/ubuntu12_32/steam_runtime/run.sh```,

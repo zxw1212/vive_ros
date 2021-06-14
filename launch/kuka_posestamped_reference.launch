@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="lwr">
+    <node name="left_controller_ps" pkg="vive_ros" type="kuka_posestamped.py" args="controller_LHR_FD7A5BC3 world 30" output="screen"/>
+  </group>
+</launch>
+
+

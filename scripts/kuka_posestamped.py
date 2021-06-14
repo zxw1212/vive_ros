@@ -31,8 +31,7 @@ class PublishFrameAsPoseStamped(object):
         """
         self.tf_l = tf.TransformListener()
         topic_name = frame_to_posestamped.replace('/', '')
-        self.pose_pub = rospy.Publisher(topic_name + '_as_posestamped',
-                                        PoseStamped, queue_size=1)
+        self.pose_pub = rospy.Publisher("one_task_inverse_kinematics/command", PoseStamped, queue_size=1)
                    
         self.frame_to_posestamped = frame_to_posestamped
         self.reference_frame = reference_frame

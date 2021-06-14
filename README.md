@@ -98,13 +98,14 @@
        ```
     9. #### Install additional ROS libraries
        ```sh 
+       $ sudo apt-get install -y libglew-dev
        $ sudo apt-get install ros-melodic-tf -y
        $ sudo apt-get install ros-melodic-tf2* -y
        ``` 
     9. #### Install `vive_ros` package in the catkin_ws
        ```sh 
        $ cd ~/catkin_ws/src
-       $ git clone https://github.com/CentroEPiaggio/vive_ros.git
+       $ git clone https://github.com/JOiiNT-LAB/vive_ros.git
        $ cd ..
        $ catkin_make
        ```
@@ -113,7 +114,15 @@
        $ cd ~/catkin_ws/src/vive_ros
        $ sudo cp ./60-HTC-Vive-perms.rules /etc/udev/rules.d
        $ sudo udevadm control --reload-rules && sudo udevadm trigger
+       $ sudo chmod 777 -R ./scripts
+       sudo chmod 777 -R ~/.ros/rosdep/sources.cache
        ```               
+   10. #### Check steam runtime path in the vive_framework.launch
+       usually is : ```~/.steam/ubuntu12_32/steam_runtime/run.sh```,
+       but can be ```~/.steam/steam/ubuntu12_32/steam_runtime/run.sh```
+   11. #### If error 307 occurred
+       ```sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled```
+       (https://github.com/ValveSoftware/SteamVR-for-Linux/issues/355)
 - ### Steam and SteamVR installation:
     1. #### Download [Steam](https://store.steampowered.com) latest version. You should get the file steam_latest.deb in your ~/Downloads folder
     2. #### Run Steam 

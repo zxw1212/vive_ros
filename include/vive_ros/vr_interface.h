@@ -35,13 +35,13 @@ class VRInterface
 
     vr::IVRSystem *pHMD_;
     vr::TrackedDevicePose_t device_poses_[vr::k_unMaxTrackedDeviceCount];
+    std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL);
 
   private:
     vr::IVRChaperone *pChaperone_;
     
     uint max_devices_;
     
-  private:
     DebugMsgCallback debug_;
     InfoMsgCallback info_;
     ErrorMsgCallback error_;
@@ -49,8 +49,6 @@ class VRInterface
     vr::ChaperoneCalibrationState cal_state_;
     float play_area_[2];
     vr::HmdQuad_t play_quat_;
-    
-    std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL);
 };
 
 #endif  // _VR_INTERFACE_H_

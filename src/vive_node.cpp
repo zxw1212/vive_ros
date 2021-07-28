@@ -764,7 +764,7 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "vive_node");
 
 #ifdef USE_IMAGE
-  VIVEnode nodeApp(90); // VIVE display max fps
+  VIVEnode nodeApp(200); // VIVE display max fps
 #else
   VIVEnode nodeApp(1000);
 #endif

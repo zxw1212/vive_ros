@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="pilot_pilot1">
+
+    <arg name="image_left" default="/camera/left/image_raw/compressed"/>
+    <arg name="image_right" default="/camera/right/image_raw/compressed"/>
+    <arg name="image_left_info" default="/camera/left/camera_info" />
+    <arg name="image_right_info" default="/camera/right/camera_info" />
+
+    <node name="vive_hmd" pkg="vive_ros" type="vive_hmd" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
+      <remap from="~image_left" to="$(arg image_left)" />
+      <remap from="~image_right" to="$(arg image_right)" />
+      <remap from="~camera_info_left" to="$(arg image_left_info)" />
+      <remap from="~camera_info_right" to="$(arg image_right_info)" />
+    </node>
+
+    
+
+  </group>
+</launch>
+
+

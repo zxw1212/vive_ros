@@ -92,9 +92,21 @@ include_directories(
 )
 
 # VIVE node:
+add_executable(vive_ctrl
+  ${SHARED_SRC_FILES}
+  src/vive_ctrl.cpp
+  src/vr_interface.cpp
+)
+
 add_executable(vive_node
   ${SHARED_SRC_FILES}
   src/vive_node.cpp
+  src/vr_interface.cpp
+)
+
+add_executable(vive_hmd
+  ${SHARED_SRC_FILES}
+  src/vive_hmd.cpp
   src/vr_interface.cpp
 )
 
@@ -110,5 +122,21 @@ target_link_libraries(vive_node
   ${EXTRA_LIBS}
 )
 
+target_link_libraries(vive_ctrl
+  ${catkin_LIBRARIES}
+  ${SDL2_LIBRARIES}
+  ${OPENVR_LIBRARIES}
+  ${CMAKE_DL_LIBS}
+  ${EXTRA_LIBS}
+)
 
-
+target_link_libraries(vive_hmd
+  ${catkin_LIBRARIES}
+  ${OPENGL_LIBRARIES} ## (OpenGL specific)
+  ${GLEW_LIBRARIES} ## (OpenGL specific)
+  ${VULKAN_LIBRARY} ## (Vulkan specific)
+  ${SDL2_LIBRARIES}
+  ${OPENVR_LIBRARIES}
+  ${CMAKE_DL_LIBS}
+  ${EXTRA_LIBS}
+)

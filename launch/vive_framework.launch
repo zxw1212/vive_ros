@@ -9,8 +9,8 @@
 
     <node name="vive_ctrl" pkg="vive_ros" type="vive_ctrl" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
     </node>
+    
     <!-- Launch Vive Hmd topics -->
-
     <arg name="image_left" default="/videostream/left/compressed"/>
     <arg name="image_right" default="/videostream/right/compressed"/>
     <arg name="image_left_info" default="/videostream/left/camera_info" />

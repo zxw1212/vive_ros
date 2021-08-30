@@ -2,12 +2,22 @@
 <launch>
   <group ns="pilot_pilot1">
 
+    <!-- VALVE INDEX SPECS -->
+    <arg name="interpupillar_distance" default="200.0"/>
+    <arg name="cam_f" default="720"/>
+
+    <!-- HTC VIVE SPECS -->
+    <!-- <arg name="interpupillar_distance" default="100.0"/> -->
+    <!-- <arg name="cam_f" default="600"/> -->
+
     <arg name="image_left" default="/camera/left/image_raw/compressed"/>
     <arg name="image_right" default="/camera/right/image_raw/compressed"/>
     <arg name="image_left_info" default="/camera/left/camera_info" />
     <arg name="image_right_info" default="/camera/right/camera_info" />
 
     <node name="vive_hmd" pkg="vive_ros" type="vive_hmd" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
+     	<param name="interpupillar_distance" value="$(arg interpupillar_distance)"/>
+     	<param name="cam_f" value="$(arg cam_f)"/>
       <remap from="~image_left" to="$(arg image_left)" />
       <remap from="~image_right" to="$(arg image_right)" />
       <remap from="~camera_info_left" to="$(arg image_left_info)" />

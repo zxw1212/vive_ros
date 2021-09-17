@@ -1,0 +1,14 @@
+# --- input topics names INDEX---------------------------------------------------------
+JOY_L_TN_ind: "/vive/controller_LHR_04BECEF8/joy"
+JOY_R_TN_ind: "/vive/controller_LHR_8735D54A/joy"
+JOY_L_POSE_TN_ind: "/pilot_pilot1/controller_LHR_04BECEF8_as_posestamped"
+JOY_R_POSE_TN_ind: "/pilot_pilot1/controller_LHR_8735D54A_as_posestamped"
+
+
+# --- input topics names VIVE---------------------------------------------------------
+JOY_L_TN_vive: "/vive/controller_LHR_FD7A5BC3/joy"
+JOY_R_TN_vive: "/vive/controller_LHR_FDED7BC2/joy"
+JOY_L_POSE_TN_vive: "/pilot_pilot1/controller_LHR_FD7A5BC3_as_posestamped"
+JOY_R_POSE_TN_vive: "/pilot_pilot1/controller_LHR_FDED7BC2_as_posestamped"
+
+HEAD_POSE_TN: "/pilot_pilot1/hmd_as_posestamped"

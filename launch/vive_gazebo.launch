@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="pilot_pilot1">
+
+    <!--REMAPPING FOR TELEOPERATION-->
+    <remap from="/pilot_pilot1/vive_ctrl/head_pose_tn" to="/teleop_pose_controller_neck/command" />
+    <remap from="/pilot_pilouet1/vive_ctrl/joy_L_pose_tn_ind" to="/teleop_pose_controller_left/command" /> 
+    <remap from="/pilot_pilot1/vive_ctrl/joy_R_pose_tn_ind" to="/teleop_pose_controller_right/command" /> 
+
+    <!-- Launch Vive controllers topics pose, tf and buttons -->
+    <rosparam param="/vive/world_offset">[0, 0, 0]</rosparam>
+    <rosparam param="/vive/world_yaw">0.0</rosparam>
+
+
+    <!-- Load parameters for pilot node --> 
+		<arg name="teleop_bimanual" default="$(find vive_ros)/conf/teleop_bimanual.yaml"/>
+		<rosparam command="load" file="$(arg teleop_bimanual)"/>
+		<!-- Launch pilot node -->
+		<node name="vive_ctrl" pkg="vive_ros" type="vive_sim_ctrl" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
+    </node>
+
+    <!-- Launch Vive Hmd topics -->
+    <arg name="image_left" default="/double_camera_link/left/image_raw/compressed"/>
+    <arg name="image_right" default="/double_camera_link/right/image_raw/compressed"/>
+    <arg name="image_left_info" default="/camera/left/camera_info" />
+    <arg name="image_right_info" default="/camera/right/camera_info" />
+
+    <node name="vive_hmd" pkg="vive_ros" type="vive_hmd" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
+      <remap from="~image_left" to="$(arg image_left)" />
+      <remap from="~image_right" to="$(arg image_right)" />
+      <remap from="~camera_info_left" to="$(arg image_left_info)" />
+      <remap from="~camera_info_right" to="$(arg image_right_info)" />
+    </node>
+
+  </group>
+</launch>
+
+

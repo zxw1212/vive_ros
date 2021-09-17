@@ -31,11 +31,26 @@ class VIVEnode
     void set_feedback(sensor_msgs::JoyFeedbackConstPtr msg);
     ros::NodeHandle nh_;
     VRInterface vr_;
+    ros::Publisher                                left_ctrl_ps_pub_ind;
+    ros::Publisher                                right_ctrl_ps_pub_ind;  
+    ros::Publisher                                left_ctrl_ps_pub_vive;
+    ros::Publisher                                right_ctrl_ps_pub_vive;
+
+
 
   private:
     ros::Rate                                     loop_rate_;
     std::vector<double>                           world_offset_;
     double                                        world_yaw_;
+    std::string                                   joy_L_pose_tn_ind;
+    std::string                                   joy_R_pose_tn_ind;
+    std::string                                   joy_L_tn_ind;
+    std::string                                   joy_R_tn_ind;
+    std::string                                   joy_L_pose_tn_vive;
+    std::string                                   joy_R_pose_tn_vive;
+    std::string                                   joy_L_tn_vive;
+    std::string                                   joy_R_tn_vive;
+    std::string                                   head_pose_tn;
     tf::TransformBroadcaster                      tf_broadcaster_;
     tf::TransformListener                         tf_listener_;
     ros::ServiceServer                            set_origin_server_;
@@ -45,9 +60,6 @@ class VIVEnode
     ros::Publisher                                tracker_pose;
     ros::Publisher                                lighthouse_pose;
     ros::Subscriber                               feedback_sub_;
-    ros::Publisher                                right_ctrl_ps_pub;
-    ros::Publisher                                left_ctrl_ps_pub;
-
 };
 
 VIVEnode::VIVEnode(int rate)
@@ -58,14 +70,36 @@ VIVEnode::VIVEnode(int rate)
   , vr_()
   , world_offset_({0, 0, 0})
   , world_yaw_(0)
+  , joy_L_pose_tn_ind("joy_L_pose_tn_ind")
+  , joy_R_pose_tn_ind("joy_R_pose_tn_ind")
+  , joy_L_tn_ind("joy_L_tn_ind")
+  , joy_R_tn_ind("joy_R_tn_ind")
+  , joy_L_pose_tn_vive("joy_L_pose_tn_vive")
+  , joy_R_pose_tn_vive("joy_R_pose_tn_vive")
+  , joy_L_tn_vive("joy_L_tn_vive")
+  , joy_R_tn_vive("joy_R_tn_vive")
+  , head_pose_tn("head_pose_tn")
 {
   nh_.getParam("/vive/world_offset", world_offset_);
   nh_.getParam("/vive/world_yaw", world_yaw_);
+  nh_.getParam("JOY_L_POSE_TN_ind",joy_L_pose_tn_ind);
+  nh_.getParam("JOY_R_POSE_TN_ind",joy_R_pose_tn_ind);   
+  nh_.getParam("JOY_L_TN_ind",joy_L_tn_ind);
+  nh_.getParam("JOY_R_TN_ind",joy_R_tn_ind);
+  nh_.getParam("JOY_L_POSE_TN_vive",joy_L_pose_tn_vive);
+  nh_.getParam("JOY_R_POSE_TN_vive",joy_R_pose_tn_vive);   
+  nh_.getParam("JOY_L_TN_vive",joy_L_tn_vive);
+  nh_.getParam("JOY_R_TN_vive",joy_R_tn_vive);
+  nh_.getParam("HEAD_POSE_TN",head_pose_tn);
   ROS_INFO(" [VIVE] World offset: [%2.3f , %2.3f, %2.3f] %2.3f", world_offset_[0], world_offset_[1], world_offset_[2], world_yaw_);
   set_origin_server_ = nh_.advertiseService("/vive/set_origin", &VIVEnode::setOriginCB, this);
   feedback_sub_ = nh_.subscribe("/vive/set_feedback", 10, &VIVEnode::set_feedback, this);
-  right_ctrl_ps_pub = nh_.advertise<geometry_msgs::PoseStamped>("/vive/left", 1);
-  left_ctrl_ps_pub  = nh_.advertise<geometry_msgs::PoseStamped>("/vive/right", 1);
+  right_ctrl_ps_pub_ind = nh_.advertise<geometry_msgs::PoseStamped>(joy_R_pose_tn_ind, 1); // Tell the master that we are going to be publishing a message of type geometry_msgs::PoseStampecd
+                                                                                           // on the topic joy_R_pose_tn_ind. The second argument is the size of our publishing queue in case if we are publishing too quickly
+  left_ctrl_ps_pub_ind  = nh_.advertise<geometry_msgs::PoseStamped>(joy_L_pose_tn_ind, 1);
+  right_ctrl_ps_pub_vive = nh_.advertise<geometry_msgs::PoseStamped>(joy_R_pose_tn_vive, 1); 
+  left_ctrl_ps_pub_vive  = nh_.advertise<geometry_msgs::PoseStamped>(joy_L_pose_tn_vive, 1);
+
   return;
 }
 
@@ -155,11 +189,15 @@ void VIVEnode::Run()
   while (ros::ok())
   {
     // do stuff
+
     vr_.Update();
 
     int controller_count = 1;
     int tracker_count = 1;
     int lighthouse_count = 1;
+
+
+
     for (int i=0; i<vr::k_unMaxTrackedDeviceCount; i++)
     {
       int dev_type = vr_.GetDeviceMatrix(i, tf_matrix);
@@ -207,14 +245,17 @@ void VIVEnode::Run()
       //get device serial number
       std::string cur_sn = vr_.GetTrackedDeviceString( vr_.pHMD_, i, vr::Prop_SerialNumber_String );
       std::replace(cur_sn.begin(), cur_sn.end(), '-', '_');
+      //std::cout << cur_sn << "\n";
 
       // It's a HMD
       if (dev_type == 1)
       {
         tf_broadcaster_.sendTransform(tf::StampedTransform(tf, ros::Time::now(), "world", "hmd"));
-        hmd_pose = nh_.advertise<geometry_msgs::PoseStamped>( "/" + ns + "/hmd_as_posestamped", 10); // assegnamento ad ogni ciclo, si può tirare fuori
+        //hmd_pose = nh_.advertise<geometry_msgs::PoseStamped>( "/" + ns + "/hmd_as_posestamped", 10); // assegnamento ad ogni ciclo, si può tirare fuori
+        hmd_pose = nh_.advertise<geometry_msgs::PoseStamped>("head_pose_tn", 10);
         hmd_pose.publish(pose_msg);
       }
+
       // It's a controller
       if (dev_type == 2)
       {
@@ -248,12 +289,18 @@ void VIVEnode::Run()
         button_states_pubs_map[cur_sn].publish(joy);
 
         // JOY pose PUBLISHER
-        if(joystick_pose_pubs_map.count(cur_sn) == 0){
-          joystick_pose_pubs_map[cur_sn] = nh_.advertise<geometry_msgs::PoseStamped>("/" + ns + "/controller_" + cur_sn + "_as_posestamped", 10);
+
+        if (cur_sn == "LHR_04BECEF8") {
+           left_ctrl_ps_pub_ind.publish(pose_msg);
+        } else if (cur_sn == "LHR_8735D54A"){
+           right_ctrl_ps_pub_ind.publish(pose_msg);
+        } else if (cur_sn == "LHR_FD7A5BC3"){
+           right_ctrl_ps_pub_vive.publish(pose_msg);
+        } else if (cur_sn == "LHR_FDED7BC2"){
+           left_ctrl_ps_pub_vive.publish(pose_msg);
         }
-        pose_msg.header.stamp = ros::Time::now();
-        joystick_pose_pubs_map[cur_sn].publish(pose_msg);
       }
+
       // It's a tracker
       if (dev_type == 3)
       {

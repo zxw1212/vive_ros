@@ -1,6 +1,4 @@
-
 #include <cmath>
-
 #include <ros/ros.h>
 #include <std_srvs/Empty.h>
 #include <sensor_msgs/Joy.h>
@@ -26,11 +24,11 @@ enum {L, R, LR};
 
 class CMainApplicationMod : public CMainApplication{
   public:
-    CMainApplicationMod( int argc, char *argv[] )
-    : CMainApplication( argc, argv )
+    CMainApplicationMod( int cam_f_ )
+    : CMainApplication(0,NULL)
     , hmd_fov(110*M_PI/180) {
       for(int i=0;i<LR;i++){
-        cam_f[i][X] = cam_f[i][Y] = 600;
+        cam_f[i][X] = cam_f[i][Y] = cam_f_; // 600! or 500
       }
       RenderFrame_hz_count = 0;
     };
@@ -167,6 +165,8 @@ class VIVEnode
     ros::Rate loop_rate_;
     std::vector<double> world_offset_;
     double world_yaw_;
+    double interpupillar_distance_;
+    int cam_f_;
     tf::TransformBroadcaster tf_broadcaster_;
     tf::TransformListener tf_listener_;
     ros::ServiceServer set_origin_server_;
@@ -183,9 +183,14 @@ VIVEnode::VIVEnode(int rate)
   , vr_()
   , world_offset_({0, 0, 0})
   , world_yaw_(0)
+  , interpupillar_distance_(0.0)
+  , cam_f_(0)
 {
   nh_.getParam("/vive/world_offset", world_offset_);
   nh_.getParam("/vive/world_yaw", world_yaw_);
+  nh_.getParam("interpupillar_distance", interpupillar_distance_);
+  nh_.getParam("cam_f", cam_f_);
+  
   set_origin_server_ = nh_.advertiseService("/vive/set_origin", &VIVEnode::setOriginCB, this);
 
   image_transport::ImageTransport it(nh_);
@@ -194,7 +199,7 @@ VIVEnode::VIVEnode(int rate)
   sub_i_L = nh_.subscribe("camera_info_left", 1, &VIVEnode::infoCb_L, this, ros::TransportHints().udp());
   sub_i_R = nh_.subscribe("camera_info_right", 1, &VIVEnode::infoCb_R, this, ros::TransportHints().udp());
   
-  pMainApplication = new CMainApplicationMod( 1, NULL );
+  pMainApplication = new CMainApplicationMod( cam_f_ );
   if (!pMainApplication->BInit()){
     pMainApplication->Shutdown();
     Shutdown();
@@ -303,7 +308,7 @@ void VIVEnode::imageCb_L(const sensor_msgs::CompressedImageConstPtr& msg){
   if(true){
     try {
       pMainApplication->ros_img[L] = cv::imdecode(cv::Mat(msg->data),1);//convert compressed image data to cv::Mat
-      translateImg(pMainApplication->ros_img[L],100,0);
+      translateImg(pMainApplication->ros_img[L], interpupillar_distance_, 0); //100,0 200
     } catch (cv_bridge::Exception& e) {
     }
   }else{
@@ -313,7 +318,7 @@ void VIVEnode::imageCb_R(const sensor_msgs::CompressedImageConstPtr& msg){
   if(true){
     try {
       pMainApplication->ros_img[R] = cv::imdecode(cv::Mat(msg->data),1);//convert compressed image data to cv::Mat
-      translateImg(pMainApplication->ros_img[R],-100,0);
+      translateImg(pMainApplication->ros_img[R],-interpupillar_distance_, 0); //-100,0 200
     } catch (cv_bridge::Exception& e) {
     }
   }else{

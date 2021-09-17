@@ -15,7 +15,12 @@
 - SteamVR : 1.16.8 
 
 # Installation
-
+- ### `GLEW` OpenGL Extension Wrangler library installation:
+       ```sh
+       $ sudo apt update
+       $ sudo apt install libglew-dev
+       ```
+    
 - ### `pip` for python 2.7 installation:
     1. #### Install pip:
        ```sh

@@ -35,7 +35,9 @@ class VIVEnode
     ros::Publisher                                right_ctrl_ps_pub_ind;  
     ros::Publisher                                left_ctrl_ps_pub_vive;
     ros::Publisher                                right_ctrl_ps_pub_vive;
-
+    ros::Publisher                                left_button_pub_ind;   
+    ros::Publisher                                right_button_pub_ind;   
+  
 
 
   private:
@@ -44,12 +46,12 @@ class VIVEnode
     double                                        world_yaw_;
     std::string                                   joy_L_pose_tn_ind;
     std::string                                   joy_R_pose_tn_ind;
-    std::string                                   joy_L_tn_ind;
-    std::string                                   joy_R_tn_ind;
+    std::string                                   joy_L_buttons_ind;
+    std::string                                   joy_R_buttons_ind;
     std::string                                   joy_L_pose_tn_vive;
     std::string                                   joy_R_pose_tn_vive;
-    std::string                                   joy_L_tn_vive;
-    std::string                                   joy_R_tn_vive;
+    std::string                                   joy_L_buttons_vive;
+    std::string                                   joy_R_buttons_vive;
     std::string                                   head_pose_tn;
     tf::TransformBroadcaster                      tf_broadcaster_;
     tf::TransformListener                         tf_listener_;
@@ -72,24 +74,24 @@ VIVEnode::VIVEnode(int rate)
   , world_yaw_(0)
   , joy_L_pose_tn_ind("joy_L_pose_tn_ind")
   , joy_R_pose_tn_ind("joy_R_pose_tn_ind")
-  , joy_L_tn_ind("joy_L_tn_ind")
-  , joy_R_tn_ind("joy_R_tn_ind")
+  , joy_L_buttons_ind("joy_L_buttons_ind")
+  , joy_R_buttons_ind("joy_R_buttons_ind")
   , joy_L_pose_tn_vive("joy_L_pose_tn_vive")
   , joy_R_pose_tn_vive("joy_R_pose_tn_vive")
-  , joy_L_tn_vive("joy_L_tn_vive")
-  , joy_R_tn_vive("joy_R_tn_vive")
+  , joy_L_buttons_vive("joy_L_buttons_vive")
+  , joy_R_buttons_vive("joy_R_buttons_vive")
   , head_pose_tn("head_pose_tn")
 {
   nh_.getParam("/vive/world_offset", world_offset_);
   nh_.getParam("/vive/world_yaw", world_yaw_);
   nh_.getParam("JOY_L_POSE_TN_ind",joy_L_pose_tn_ind);
   nh_.getParam("JOY_R_POSE_TN_ind",joy_R_pose_tn_ind);   
-  nh_.getParam("JOY_L_TN_ind",joy_L_tn_ind);
-  nh_.getParam("JOY_R_TN_ind",joy_R_tn_ind);
+  nh_.getParam("JOY_L_buttons_ind",joy_L_buttons_ind);
+  nh_.getParam("JOY_R_buttons_ind",joy_R_buttons_ind);
   nh_.getParam("JOY_L_POSE_TN_vive",joy_L_pose_tn_vive);
   nh_.getParam("JOY_R_POSE_TN_vive",joy_R_pose_tn_vive);   
-  nh_.getParam("JOY_L_TN_vive",joy_L_tn_vive);
-  nh_.getParam("JOY_R_TN_vive",joy_R_tn_vive);
+  nh_.getParam("JOY_L_buttons_vive",joy_L_buttons_vive);
+  nh_.getParam("JOY_R_buttons_vive",joy_R_buttons_vive);
   nh_.getParam("HEAD_POSE_TN",head_pose_tn);
   ROS_INFO(" [VIVE] World offset: [%2.3f , %2.3f, %2.3f] %2.3f", world_offset_[0], world_offset_[1], world_offset_[2], world_yaw_);
   set_origin_server_ = nh_.advertiseService("/vive/set_origin", &VIVEnode::setOriginCB, this);
@@ -99,6 +101,8 @@ VIVEnode::VIVEnode(int rate)
   left_ctrl_ps_pub_ind  = nh_.advertise<geometry_msgs::PoseStamped>(joy_L_pose_tn_ind, 1);
   right_ctrl_ps_pub_vive = nh_.advertise<geometry_msgs::PoseStamped>(joy_R_pose_tn_vive, 1); 
   left_ctrl_ps_pub_vive  = nh_.advertise<geometry_msgs::PoseStamped>(joy_L_pose_tn_vive, 1);
+  right_button_pub_ind = nh_.advertise<sensor_msgs::Joy>(joy_R_buttons_ind, 1);
+  left_button_pub_ind = nh_.advertise<sensor_msgs::Joy>(joy_L_buttons_ind, 1);
 
   return;
 }
@@ -282,11 +286,17 @@ void VIVEnode::Run()
         // Trigger's axis
         joy.axes[2] = state.rAxis[1].x;
 
-        // JOY buttons and axis PUBLISHER
+        /* JOY buttons and axis PUBLISHER
         if(button_states_pubs_map.count(cur_sn) == 0){
           button_states_pubs_map[cur_sn] = nh_.advertise<sensor_msgs::Joy>("/vive/controller_"+cur_sn+"/joy", 10);
         }
-        button_states_pubs_map[cur_sn].publish(joy);
+        button_states_pubs_map[cur_sn].publish(joy);*/
+
+        if (cur_sn == "LHR_04BECEF8") {
+          left_button_pub_ind.publish(joy);
+        }else if (cur_sn == "LHR_8735D54A"){
+           right_button_pub_ind.publish(joy);
+        }
 
         // JOY pose PUBLISHER
 

@@ -100,6 +100,12 @@ class CMainApplicationMod : public CMainApplication{
           cam_fov[i][j] = 2 * atan( cam_pic_size[i][j]/2 / cam_f[i][j] );
           cam_pic_size_on_hmd[i][j] = (int)( hmd_eye2panel_z[j] * 2 * tan(cam_fov[i][j]/2) );
         }
+
+        /*std::cout << "********************************************************************" << std::endl;
+        std::cout << in[0].size() << std::endl;
+        std::cout << in[1].size() << std::endl;
+        // std::cout << ros_img_resized.size() << std::endl;
+        std::cout << "********************************************************************" << std::endl;*/
         cv::resize(in[i], ros_img_resized[i], cv::Size(cam_pic_size_on_hmd[i][X], cam_pic_size_on_hmd[i][Y]));
         cv::flip(ros_img_resized[i], ros_img_resized[i], 0);
         cv::Rect hmd_panel_area_rect( ros_img_resized[i].cols/2-out[i].cols/2, ros_img_resized[i].rows/2-out[i].rows/2, out[i].cols, out[i].rows);
@@ -346,6 +352,8 @@ void VIVEnode::infoCb_R(const sensor_msgs::CameraInfoConstPtr& msg){
 
 // Main
 int main(int argc, char** argv){
+
+  //std::cout << cv::getBuildInformation().c_str() << std::endl;
   ros::init(argc, argv, "vive_node");
 
   VIVEnode nodeApp(90); // VIVE display max fps

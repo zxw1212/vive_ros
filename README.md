@@ -8,7 +8,6 @@
 - OS: Ubuntu 18.04 lts
 - Nvidia GPU Drivers : 460.39
 - CUDA : 11.2  
-- PL: Python 2.7
 - Compiler: cmake C/CXX GNU 7.5.0
 - Framework: Ros Melodic   
 - Steam : 1.0.0.68

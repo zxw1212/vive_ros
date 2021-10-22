@@ -20,17 +20,6 @@
        $ sudo apt update
        $ sudo apt install libglew-dev
        ```
-    
-- ### `pip` for python 2.7 installation:
-    1. #### Install pip:
-       ```sh
-       $ sudo apt update
-       $ sudo apt install python-pip
-       ```
-    2. #### Check pip version installed:
-       ```sh
-       $ pip --version
-       ```
        
 - ### Valve's OpenVR SDK installation:
 
@@ -49,12 +38,6 @@
        $ cmake -DCMAKE_BUILD_TYPE=Release ../
        $ make
        ```
-       
-- ### `pyopenvr` library installation:
-    1. #### Use `pip2` to download and install `pyopenvr`
-    ```bash
-    pip install openvr==1.3.2201
-    ```
   
 - ### ROS Melodic installation:
     1. #### Setup your sources.list

@@ -212,3 +212,12 @@ To set this mode:
 
 Now launch Steam and SteamVR and then the nodes as already explained.
 
+# Troubleshoot:
+
+## SteamVR Fail: Error 307
+![Alt text](images/lighthouse_frame.jpg?raw=true "lighthouse frame")
+
+Try this:
+   ```sh
+   sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled
+   ```

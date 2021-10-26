@@ -16,6 +16,8 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <geometry_msgs/Twist.h>
+#include <std_msgs/Float64MultiArray.h>
+#include <tf/tf.h>
 
 /*#include <teleop_pilot_station/connect_to_robot.h>
 #include <teleop_pilot_station/connect_robot_mic.h>
@@ -88,6 +90,8 @@ Quaterniond       head_ori_raw = Quaterniond::Identity();
 Matrix4d          sensor2head = Matrix4d::Identity();
 Matrix4d          sensor2joyL = Matrix4d::Identity();
 Matrix4d          sensor2joyR = Matrix4d::Identity();
+
+
 
 sensor_msgs::Joy  teaching_left_cmd;
 
@@ -330,6 +334,8 @@ int main(int argc, char **argv)
   double            shoulder_d(0);
   double            neck_l(0);
   double            bias_vive(0.17);
+  double head_roll, head_pitch, head_yaw;
+
 
   string            joy_l_tn;
   string            joy_r_tn;
@@ -397,6 +403,8 @@ int main(int argc, char **argv)
   Vector3d          head_calib2head_P;
   Vector3d          shoulder2joyR_P;
   Vector3d          shoulder2joyL_P;
+  Vector3d          euler;
+
 
   Quaterniond       head_calib2head_Q;
   Quaterniond       shoulder2joyR_Q;
@@ -412,6 +420,9 @@ int main(int argc, char **argv)
   Matrix4d          frankaL2frankaLang = Matrix4d::Identity();
   Matrix4d          pilotHand2qbHandR = Matrix4d::Identity();
   Matrix4d          pilotHand2qbHandL = Matrix4d::Identity();
+
+  // Define quaternion for head pose in order to trasform it from quaternion to RPY
+  tf::Quaternion    head_quat;
 
   ros::Duration     robot_list_refresh_rate = ros::Duration(60);
   ros::Time         robot_list_refresh_timer(0);
@@ -514,6 +525,9 @@ int main(int argc, char **argv)
   ros::Publisher teaching_cmd_left_pub;
   ros::Publisher teaching_cmd_right_pub;
 
+  // Define publisher for RPY head pose. In fact neck_position_controller needs RPY data
+  ros::Publisher neck_RPY_pub = n.advertise<std_msgs::Float64MultiArray>("/neck_position_controller/command", 1); //if publisher write directly on the controller topic, the remapping is unnecessary
+
 
   // --------------------------------------------------------------- Services
   // Video connection service
@@ -540,17 +554,19 @@ int main(int argc, char **argv)
   std_msgs::String              down_menu_msg;
   
   geometry_msgs::PoseStamped    head_pose_msg;
+  std_msgs::Float64MultiArray   head_joint_msg;
   geometry_msgs::PoseStamped    left_joy_pose_msg;
   geometry_msgs::PoseStamped    right_joy_pose_msg;
 
   //geometry_msgs::TwistStamped   twist_base_msg;
-  geometry_msgs::Twist   twist_base_msg;
+  geometry_msgs::Twist          twist_base_msg;
 
   std_msgs::Float64             left_joy_closure_msg;
   std_msgs::Float64             right_joy_closure_msg;
 
   sensor_msgs::Joy              teaching_cmd_left_msg;
   sensor_msgs::Joy              teaching_cmd_right_msg;
+  
 
   // --------------------------------------------------------------- Init vars
   ros::Rate loop_rate(run_freq);
@@ -830,6 +846,15 @@ int main(int argc, char **argv)
         head_pose_msg.pose.orientation.z = head_calib2head_Q.z();
         head_pose_msg.pose.orientation.w = head_calib2head_Q.w();
 
+        // From head quaternion to RPY
+        tf::Matrix3x3(tf::Quaternion(head_calib2head_Q.x(), head_calib2head_Q.y(), head_calib2head_Q.z(), head_calib2head_Q.w())).getRPY(head_roll, head_pitch, head_yaw);
+
+        head_joint_msg.data.clear();
+        head_joint_msg.data.push_back(head_roll);
+        head_joint_msg.data.push_back(head_pitch); // + 1.0); offset se si tiene il visore sulla fronte
+        head_joint_msg.data.push_back(head_yaw);
+
+
         left_joy_pose_msg.header.stamp = ros::Time::now();
         left_joy_pose_msg.header.frame_id = "hand_L";
         left_joy_pose_msg.pose.position.x = shoulder2joyL_P.x();
@@ -850,21 +875,12 @@ int main(int argc, char **argv)
         right_joy_pose_msg.pose.orientation.z = shoulder2joyR_Q.z();
         right_joy_pose_msg.pose.orientation.w = shoulder2joyR_Q.w();
 
-        /*twist_base_msg.header.stamp = ros::Time::now();
-        twist_base_msg.header.frame_id = "base_vel";
-        twist_base_msg.twist.linear.x = robot_base_vel_lin.x();
-        twist_base_msg.twist.linear.y = robot_base_vel_lin.y();
-        twist_base_msg.twist.linear.z =  robot_base_vel_lin.z();
-        twist_base_msg.twist.angular.x = robot_base_vel_ang.x();
-        twist_base_msg.twist.angular.y = robot_base_vel_ang.y();
-        twist_base_msg.twist.angular.z = robot_base_vel_ang.z();*/
-
         twist_base_msg.linear.x = robot_base_vel_lin.x();
-        twist_base_msg.linear.y = robot_base_vel_lin.y();
+        twist_base_msg.linear.y = -robot_base_vel_lin.y();
         twist_base_msg.linear.z =  robot_base_vel_lin.z();
         twist_base_msg.angular.x = robot_base_vel_ang.x();
         twist_base_msg.angular.y = robot_base_vel_ang.y();
-        twist_base_msg.angular.z = robot_base_vel_ang.z();
+        twist_base_msg.angular.z = -robot_base_vel_ang.z();
 
 
         //left_joy_closure_msg.data = left_hand_cl;
@@ -894,6 +910,7 @@ int main(int argc, char **argv)
         left_joy_pose_pub.publish(left_joy_pose_msg);
         right_joy_pose_pub.publish(right_joy_pose_msg);
         twist_base_pub.publish(twist_base_msg);
+        neck_RPY_pub.publish(head_joint_msg);
         // --- Publish messages
         /*if(enable_cmd){
           head_pose_pub.publish(head_pose_msg);

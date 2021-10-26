@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- VALVE INDEX SPECS -->
+    <arg name="interpupillar_distance" default="200.0"/>
+    <arg name="cam_f" default="720"/>
 
+    <!-- HTC VIVE SPECS -->
+    <!-- <arg name="interpupillar_distance" default="100.0"/> -->
+    <!-- <arg name="cam_f" default="600"/> -->
 
     <!--REMAPPING FOR TELEOPERATION-->
-    <!--remap from="/pilot_pilot1/vive_ctrl/head_pose_tn" to="/teleop_pose_controller_neck/command" />
-    <remap from="/pilot_pilot1/vive_ctrl/joy_L_pose_tn_ind" to="/teleop_pose_controller_left/command" /> 
-    <remap from="/pilot_pilot1/vive_ctrl/joy_R_pose_tn_ind" to="/teleop_pose_controller_right/command" /--> 
+    <!-- <remap from="/head_pose" to="/teleop_pose_controller_neck/command" /> --> 
     <remap from="/hand_L_ref" to="/teleop_pose_controller_left/command" /> 
     <remap from="/hand_R_ref" to="/teleop_pose_controller_right/command" />
     <remap from="/base_vel" to="/robotnik_base_control/cmd_vel" />
@@ -19,6 +23,7 @@
 		<rosparam command="load" file="$(arg teleop_bimanual)"/>
 		<!-- Launch pilot node -->
 		<node name="vive_sim_ctrl" pkg="vive_ros" type="vive_sim_ctrl" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/>
+		<!--node name="vive_sim_ctrl" pkg="vive_ros" type="vive_sim_ctrl" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/-->
     
 		<!-- Load parameters for pilot node --> 
 		<arg name="yamlFile_pilot" default="$(find vive_ros)/conf/pilot_vive.yaml"/>
@@ -28,18 +33,20 @@
     <!--node name="calib_sim" pkg="vive_ros" type="calib_sim" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/-->
 
 
-    <!-- Launch Vive Hmd topics>
+    <!-- Launch Vive Hmd topics-->
     <arg name="image_left" default="/double_camera_link/left/image_raw/compressed"/>
     <arg name="image_right" default="/double_camera_link/right/image_raw/compressed"/>
-    <arg name="image_left_info" default="/camera/left/camera_info" />
-    <arg name="image_right_info" default="/camera/right/camera_info" />
+    <arg name="image_left_info" default="/double_camera_link/left/camera_info" />
+    <arg name="image_right_info" default="/double_camera_link/right/camera_info" />
 
     <node name="vive_hmd" pkg="vive_ros" type="vive_hmd" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
+      <param name="interpupillar_distance" value="$(arg interpupillar_distance)"/>
+     	<param name="cam_f" value="$(arg cam_f)"/>
       <remap from="~image_left" to="$(arg image_left)" />
       <remap from="~image_right" to="$(arg image_right)" />
       <remap from="~camera_info_left" to="$(arg image_left_info)" />
-      <remap from="~camera_info_right" to="$(arg image_right_info)" / >
-    </node-->
+      <remap from="~camera_info_right" to="$(arg image_right_info)" />
+    </node>
 
 </launch>
 

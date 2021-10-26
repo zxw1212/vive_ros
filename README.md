@@ -8,7 +8,6 @@
 - OS: Ubuntu 18.04 lts
 - Nvidia GPU Drivers : 460.39
 - CUDA : 11.2  
-- PL: Python 2.7
 - Compiler: cmake C/CXX GNU 7.5.0
 - Framework: Ros Melodic   
 - Steam : 1.0.0.68
@@ -19,17 +18,6 @@
        ```sh
        $ sudo apt update
        $ sudo apt install libglew-dev
-       ```
-    
-- ### `pip` for python 2.7 installation:
-    1. #### Install pip:
-       ```sh
-       $ sudo apt update
-       $ sudo apt install python-pip
-       ```
-    2. #### Check pip version installed:
-       ```sh
-       $ pip --version
        ```
        
 - ### Valve's OpenVR SDK installation:
@@ -49,12 +37,6 @@
        $ cmake -DCMAKE_BUILD_TYPE=Release ../
        $ make
        ```
-       
-- ### `pyopenvr` library installation:
-    1. #### Use `pip2` to download and install `pyopenvr`
-    ```bash
-    pip install openvr==1.3.2201
-    ```
   
 - ### ROS Melodic installation:
     1. #### Setup your sources.list
@@ -230,3 +212,12 @@ To set this mode:
 
 Now launch Steam and SteamVR and then the nodes as already explained.
 
+# Troubleshoot:
+
+## SteamVR Fail: Error 307
+
+- SteamVR takes the wrong Vulkan implementation
+Try this:
+   ```sh
+   sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled
+   ```

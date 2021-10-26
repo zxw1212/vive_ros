@@ -36,7 +36,9 @@ class VIVEnode
     ros::Publisher                                left_ctrl_ps_pub_vive;
     ros::Publisher                                right_ctrl_ps_pub_vive;
     ros::Publisher                                left_button_pub_ind;   
-    ros::Publisher                                right_button_pub_ind;   
+    ros::Publisher                                right_button_pub_ind;
+    ros::Publisher                                right_button_pub_vive;
+    ros::Publisher                                left_button_pub_vive;
   
 
 
@@ -103,6 +105,9 @@ VIVEnode::VIVEnode(int rate)
   left_ctrl_ps_pub_vive  = nh_.advertise<geometry_msgs::PoseStamped>(joy_L_pose_tn_vive, 1);
   right_button_pub_ind = nh_.advertise<sensor_msgs::Joy>(joy_R_buttons_ind, 1);
   left_button_pub_ind = nh_.advertise<sensor_msgs::Joy>(joy_L_buttons_ind, 1);
+  right_button_pub_vive = nh_.advertise<sensor_msgs::Joy>(joy_R_buttons_vive, 1);
+  left_button_pub_vive = nh_.advertise<sensor_msgs::Joy>(joy_L_buttons_vive, 1);
+
 
   return;
 }
@@ -296,17 +301,20 @@ void VIVEnode::Run()
           left_button_pub_ind.publish(joy);
         }else if (cur_sn == "LHR_8735D54A"){
            right_button_pub_ind.publish(joy);
+        } else if (cur_sn == "LHR_FDED7BC2"){
+           right_button_pub_vive.publish(joy);
+        } else if (cur_sn == "LHR_FD7A5BC3"){
+           left_button_pub_vive.publish(joy);
         }
-
         // JOY pose PUBLISHER
 
         if (cur_sn == "LHR_04BECEF8") {
            left_ctrl_ps_pub_ind.publish(pose_msg);
         } else if (cur_sn == "LHR_8735D54A"){
            right_ctrl_ps_pub_ind.publish(pose_msg);
-        } else if (cur_sn == "LHR_FD7A5BC3"){
-           right_ctrl_ps_pub_vive.publish(pose_msg);
         } else if (cur_sn == "LHR_FDED7BC2"){
+           right_ctrl_ps_pub_vive.publish(pose_msg);
+        } else if (cur_sn == "LHR_FD7A5BC3"){
            left_ctrl_ps_pub_vive.publish(pose_msg);
         }
       }

@@ -25,10 +25,10 @@ TEACHING_CMD_LEFT_TAIL: "/teaching_cmd_left"
 TEACHING_CMD_RIGHT_TAIL: "/teaching_cmd_right"
 
 # --- input topics names ---------------------------------------------------------
-JOY_L_TN: "/vive_sim_ctrl/joy_L_buttons_vive"
-JOY_R_TN: "/vive_sim_ctrl/joy_R_buttons_vive"
-JOY_L_POSE_TN: "/vive_sim_ctrl/joy_L_pose_tn_vive"
-JOY_R_POSE_TN: "/vive_sim_ctrl/joy_R_pose_tn_vive"
+JOY_R_TN: "/vive_sim_ctrl/joy_R_buttons_ind"
+JOY_L_TN: "/vive_sim_ctrl/joy_L_buttons_ind"
+JOY_L_POSE_TN: "/vive_sim_ctrl/joy_L_pose_tn_ind"
+JOY_R_POSE_TN: "/vive_sim_ctrl/joy_R_pose_tn_ind"
 HEAD_POSE_TN: "/vive_sim_ctrl/head_pose_tn"
 
 # --- services names ---------------------------------------------------------
@@ -44,7 +44,7 @@ CLOSE_AUDIO_SV: "/close_audio_stream"
 # --- mapping functionalities ----------------------------------------------------
 
 ENTER_JOY: "R"
-ENTER_BUTTON: 2
+ENTER_BUTTON: 3
 
 ESC_JOY: "R"
 ESC_BUTTON: 0

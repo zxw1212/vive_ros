@@ -1,14 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- CHOOSE DEVICE, REMEMBER TO CHANGE TOPICS IN PILOT_VIVE.YAML -->
 
-    <!-- VALVE INDEX SPECS >
-    <arg name="interpupillar_distance" default="200.0"/>
-    <arg name="cam_f" default="720"/-->
-
-    <!-- HTC VIVE SPECS -->
-    <arg name="interpupillar_distance" default="100.0"/> 
-    <arg name="cam_f" default="600"/>
+    <!--CHOOSE DEVICE SETTING TRUE/FALSE -->
+    <arg name="vive" default="false"/>  
+    <arg name="index" default="true"/>  
 
     <!--REMAPPING FOR TELEOPERATION-->
     <!-- <remap from="/head_pose" to="/teleop_pose_controller_neck/command" /> --> 
@@ -20,20 +15,27 @@
     <rosparam param="/vive/world_offset">[0, 0, 0]</rosparam>
     <rosparam param="/vive/world_yaw">0.0</rosparam>
 
+    <!-- VALVE INDEX SPECS -->
+    <arg name="interpupillar_distance_index" default="200.0"/>
+    <arg name="cam_f_index" default="720"/>
+    <!-- HTC VIVE SPECS -->
+    <arg name="interpupillar_distance_vive" default="100.0"/>
+    <arg name="cam_f_vive" default="600"/>
+
     <!-- Load parameters for pilot node --> 
 		<arg name="teleop_bimanual" default="$(find vive_ros)/conf/teleop_bimanual.yaml"/>
 		<rosparam command="load" file="$(arg teleop_bimanual)"/>
 		<!-- Launch pilot node -->
 		<node name="vive_sim_ctrl" pkg="vive_ros" type="vive_sim_ctrl" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/>
-		<!--node name="vive_sim_ctrl" pkg="vive_ros" type="vive_sim_ctrl" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/-->
-    
-		<!-- Load parameters for pilot node --> 
-		<arg name="yamlFile_pilot" default="$(find vive_ros)/conf/pilot_index.yaml"/>
-		<rosparam command="load" file="$(arg yamlFile_pilot)"/>
+
+    <!-- Load parameters for pilot node (INDEX)--> 
+		<arg name="yamlFile_pilot" default="$(find vive_ros)/conf/pilot_index.yaml" if="$(arg index)"/>
+		<rosparam command="load" file="$(arg yamlFile_pilot)" if="$(arg index)"/>
+    <!-- Load parameters for pilot node (VIVE)--> 
+	  <arg name="yamlFile_pilot" default="$(find vive_ros)/conf/pilot_vive.yaml" if="$(arg vive)"/>
+		<rosparam command="load" file="$(arg yamlFile_pilot)" if="$(arg vive)"/>
 		<!-- Launch pilot node -->
 		<node name="calib_sim" pkg="vive_ros" type="calib_sim" output="screen" />
-    <!--node name="calib_sim" pkg="vive_ros" type="calib_sim" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/-->
-
 
     <!-- Launch Vive Hmd topics-->
     <arg name="image_left" default="/double_camera_link/left/image_raw/compressed"/>
@@ -42,8 +44,10 @@
     <arg name="image_right_info" default="/double_camera_link/right/camera_info" />
 
     <node name="vive_hmd" pkg="vive_ros" type="vive_hmd" launch-prefix="$(env HOME)/.steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true">
-      <param name="interpupillar_distance" value="$(arg interpupillar_distance)"/>
-     	<param name="cam_f" value="$(arg cam_f)"/>
+      <param name="interpupillar_distance" value="$(arg interpupillar_distance_index)" if="$(arg index)"/>
+      <param name="cam_f" value="$(arg cam_f_index)" if="$(arg index)"/>
+      <param name="interpupillar_distance" value="$(arg interpupillar_distance_vive)" if="$(arg vive)"/>
+      <param name="cam_f" value="$(arg cam_f_vive)" if="$(arg vive)"/>
       <remap from="~image_left" to="$(arg image_left)" />
       <remap from="~image_right" to="$(arg image_right)" />
       <remap from="~camera_info_left" to="$(arg image_left_info)" />

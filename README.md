@@ -226,9 +226,9 @@
 
   A list of the most common problems found during installation and usage:
 
-  - SteamVR Fail: Error 307
+  - **SteamVR Fail: Error 307**
 
-    (SOLUTION) SteamVR takes the wrong Vulkan implementation. Try this:
+    SteamVR takes the wrong Vulkan implementation. Try this:
      ```sh
      sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled
      ```

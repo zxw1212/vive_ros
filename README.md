@@ -2,7 +2,7 @@
   <img src="images/jntlb_logo.png" alt="jntlb_logo">
 </p>
 
-<h1 align="center"> Vive ROS package extended </h1>
+<h1 align="center"> Vive ROS package extended, based on <a href="https://github.com/knorth55/vive_ros">knorth55/vive_ros</a><i> </h1>
 <h3 align="center"> ROS Interface package for HTC Vive and Valve Index </h3>  
 
 <!-- TABLE OF CONTENTS -->
@@ -42,29 +42,12 @@
 <!-- ABOUT THE PROJECT -->
 <h2 id="about-the-project"> :pencil: About The Project</h2>
 
-  This project uses Gstreamer to send/receive a stereo video streaming over an RTP over UDP connection. 
-  It consist of two main nodes:
+  Vive ROS package is made by two nodes:
 
-  - gst_video_streamer: 
+   -vive_ctrl: Publishes the hmd and controllers poses tracked by the system into a ROS topic in geometry_msgs/PoseStamped format. In addition, it publishes also the commands coming from the controller buttons
+   
+   -vive_hmd: Reads two topics in sensor_msgs/ImageCompressed format and stream the input image streams into the lenses of the hmd.
 
-    It is the node that provides a service to open/close the video transmission. The Gstreamer streaming pipeline is executed using a .sh script called 'gst_stereo.sh'
-  
-  - gst_video_receiver: 
-
-    It is the node responsible to wait for the stream, split it and publish it in two ROS topics (left/right). 
-    In addition it provides an estimation of the latency, measuring the delay between
-    the publishment of the frames.
-
-  There are 3 branches of this package:
-
-  - general_purpose:
-    it can be used to realize a video stream between two computers
-  
-  - teleoperation-framework:
-    Optimized to work on the <a href="https://www.joiintlab.com/use-cases/robot-avatar-for-remote-activity/">Joiint Lab Robotics Teleoperation Framework</a><i>
-  
-  - develop:
-    The branch that contains all the code where we are working on. The nodes can be incomplete or not working.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -107,32 +90,24 @@
     │   └── vr_interface.h
     |
     ├── launch
-    │   ├── check_vr.launch
-    │   ├── server_vr.launch
     │   ├── teleop_simulation.launch
     │   ├── vive_ctrl.launch
     │   ├── vive_framework.launch
     │   ├── vive_gazebo.launch
     │   ├── vive_hmd.launch
-    │   └── vive.launch
     |
     ├── rviz
     │   └── bimanual.rviz
-    |
-    ├── scripts
-    │   ├── check_vr.sh
-    │   ├── close_servervr.sh
-    │   └── launch_servervr.sh
     |
     ├── src
     │   ├── calib_sim.cpp
     │   ├── vive_ctrl.cpp
     │   ├── vive_hmd.cpp
-    │   ├── vive_node.cpp
     │   ├── vive_sim_ctrl.cpp
     |   └── vr_interface.cpp
     |
     ├── LICENSE
+    ├── 60-HTC-Vive-perms.rules
     ├── package.xml
     └── README.md
 
@@ -341,6 +316,8 @@
    6. Set ```"enable": true``` to enable it.
 
    Now launch Steam and SteamVR and then the nodes as already explained.
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 # Troubleshoot:
 

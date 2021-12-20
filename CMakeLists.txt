@@ -91,13 +91,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-
-add_executable(vive_node
-  ${SHARED_SRC_FILES}
-  src/vive_node.cpp
-  src/vr_interface.cpp
-)
-
 add_executable(vive_hmd
   ${SHARED_SRC_FILES}
   src/vive_hmd.cpp
@@ -123,18 +116,6 @@ add_executable(calib_sim
 )
 
 ## link all
-target_link_libraries(vive_node
-  ${catkin_LIBRARIES}
-  ${OPENGL_LIBRARIES} ## (OpenGL specific)
-  ${GLEW_LIBRARIES} ## (OpenGL specific)
-  ${VULKAN_LIBRARY} ## (Vulkan specific)
-  ${SDL2_LIBRARIES}
-  ${OPENVR_LIBRARIES}
-  ${CMAKE_DL_LIBS}
-  ${EXTRA_LIBS}
-)
-
-
 target_link_libraries(vive_hmd
   ${catkin_LIBRARIES}
   ${OPENGL_LIBRARIES} ## (OpenGL specific)
@@ -178,7 +159,3 @@ ${OPENVR_LIBRARIES}
 ${CMAKE_DL_LIBS}
 ${EXTRA_LIBS}
 )
-
-# add_executable(calib_sim src/calib_sim.cpp)
-# target_link_libraries(calib_sim  ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-# add_dependencies(calib_sim ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

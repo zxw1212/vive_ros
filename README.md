@@ -51,20 +51,24 @@
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-**Hardware requirements:**
+<!-- REQUIREMENTS -->
+<h2 id="requirements"> :warning: Requirements</h2>  
+  
+**Hardware Requirements:** 
 - GPU based system (>= Scheda grafica NVIDIA GeForce RTX 2070 Max-Q)
-
-**Software requirements:**:
-
+  
+**System Requirements:**
 - OS: Ubuntu 18.04 lts
 - Nvidia GPU Drivers : >=460.39
-- CUDA : >=11.2  
 - Compiler: cmake C/CXX GNU 7.5.0
 - Framework: Ros Melodic   
+  
+**Software requirements:**
+- libglew-dev
+- OpenVR : 1.3.22
 - Steam : 1.0.0.68
 - SteamVR : 1.16.8 
-- OpenVR : 1.3.22
-
+  
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <!-- FOLDER STRUCTURE -->

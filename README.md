@@ -140,68 +140,24 @@
        $ make
        ```
   
-- ### ROS Melodic installation:
-    1. #### Setup your sources.list
-       ```sh
-       $ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-       ```
-    2. #### Set up your keys
-       ```sh
-       $ sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-       ```
-       If you experience issues connecting to the keyserver, you can try substituting hkp://pgp.mit.edu:80 or hkp://keyserver.ubuntu.com:80 in the previous command.
-       Alternatively, you can use curl instead of the apt-key command, which can be helpful if you are behind a proxy server: 
-       ```sh
-       $     curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add -
-       ```
-    3. #### Install ROS Melodic Full version
-       ```sh
-       $ sudo apt update
-       $ sudo apt install ros-melodic-desktop-full
-       ```
-    4. #### Environment Setup
-       ```sh
-       $ echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
-       $ source ~/.bashrc
-       ```
-    5. #### Dependencies for building packages
-       ```sh
-       $ sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
-       ```
-    6. #### Initialize Rosdep
-       ```sh
-       $ sudo apt install python-rosdep
-       $ sudo rosdep init
-       $ rosdep update
-       ```
-    7. #### Create a ROS Workspace
-       ```sh
-       $ mkdir -p ~/catkin_ws/src
-       $ cd ~/catkin_ws/
-       $ catkin_make 
-       ```
-    8. #### Local Environment Setup
-       ```sh
-       $ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-       $ source ~/.bashrc
-       ```
-    9. #### Install additional ROS libraries
+- ### Install ROS package:
+    1. #### Install additional ROS libraries
        ```sh 
        $ sudo apt-get install ros-melodic-tf -y
        $ sudo apt-get install ros-melodic-tf2* -y
        ``` 
-    9. #### Install `vive_ros` package in the catkin_ws
+    2. #### Install `vive_ros` package in the catkin_ws
        ```sh 
        $ cd ~/catkin_ws/src
        $ git clone https://github.com/JOiiNT-LAB/vive_ros.git
        $ cd ..
        $ catkin_make
        ```
-    9. #### Install `vive_ros` package in the catkin_ws
+    3. #### Add rules for the Vive devices:
        ```sh 
        $ cd ~/catkin_ws/src/vive_ros
        $ sudo cp ./60-HTC-Vive-perms.rules /etc/udev/rules.d
-       $ sudo udevadm control --reload-rules && sudo udevadm trigger
+       $ sudo udevadm https://github.com/JOiiNT-LAB/vcontrol --reload-rules && sudo udevadm trigger
        ```               
 - ### Steam and SteamVR installation:
     1. #### Download [Steam](https://store.steampowered.com) latest version. You should get the file steam_latest.deb in your ~/Downloads folder

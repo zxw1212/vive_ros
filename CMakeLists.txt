@@ -103,18 +103,6 @@ add_executable(vive_ctrl
   src/vr_interface.cpp
 )
 
-add_executable(vive_sim_ctrl
-  ${SHARED_SRC_FILES}
-  src/vive_sim_ctrl.cpp
-  src/vr_interface.cpp
-)
-
-add_executable(calib_sim
- ${SHARED_SRC_FILES}
-  src/calib_sim.cpp
-  src/vr_interface.cpp
-)
-
 ## link all
 target_link_libraries(vive_hmd
   ${catkin_LIBRARIES}
@@ -138,24 +126,6 @@ target_link_libraries(vive_ctrl
   ${EXTRA_LIBS}
 )
 
-target_link_libraries(vive_sim_ctrl
-${catkin_LIBRARIES}
-${OPENGL_LIBRARIES} ## (OpenGL specific)
-${GLEW_LIBRARIES} ## (OpenGL specific)
-${VULKAN_LIBRARY} ## (Vulkan specific)
-${SDL2_LIBRARIES}
-${OPENVR_LIBRARIES}
-${CMAKE_DL_LIBS}
-${EXTRA_LIBS}
-)
 
-target_link_libraries(calib_sim
-${catkin_LIBRARIES}
-${OPENGL_LIBRARIES} ## (OpenGL specific)
-${GLEW_LIBRARIES} ## (OpenGL specific)
-${VULKAN_LIBRARY} ## (Vulkan specific)
-${SDL2_LIBRARIES}
-${OPENVR_LIBRARIES}
-${CMAKE_DL_LIBS}
-${EXTRA_LIBS}
-)
+
+

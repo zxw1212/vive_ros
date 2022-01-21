@@ -11,10 +11,8 @@
   <url type="repository">https://github.com/robosavvy/vive_ros</url>
   <maintainer email="vmatos@robosavvy.com">Vitor Matos</maintainer>
   
-
   <buildtool_depend>catkin</buildtool_depend>
   
-
   <build_depend>roscpp</build_depend>  
   <build_depend>geometry_msgs</build_depend>
   <build_depend>std_srvs</build_depend>

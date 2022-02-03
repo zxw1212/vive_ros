@@ -23,13 +23,7 @@
         <li><a href="#steam-steamvr-installation">Steam/SteamVR Installation</a></li>
       </ul>
     </li>
-    <li>
-      <a href="#usage"> ➤ Usage</a>
-      <ul>
-        <li><a href="#Sender-side">Sender side</a></li>
-        <li><a href="#Receiver-side">Receiver side</a></li>
-      </ul>
-    </li>
+    <li><a href="#usage"> ➤ Usage</a></li>
     <li><a href="#troubleshoot"> ➤ Troubleshoot</a></li>
     <li><a href="#contributors"> ➤ Contributors</a></li>
 

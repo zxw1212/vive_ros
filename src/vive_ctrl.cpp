@@ -10,6 +10,9 @@
 
 #include "vive_ros/vr_interface.h"
 
+
+
+
 void handleDebugMessages(const std::string &msg) {ROS_DEBUG(" [VIVE] %s",msg.c_str());}
 void handleInfoMessages(const std::string &msg) {ROS_INFO(" [VIVE] %s",msg.c_str());}
 void handleErrorMessages(const std::string &msg) {ROS_ERROR(" [VIVE] %s",msg.c_str());}
@@ -243,7 +246,7 @@ void VIVEnode::Run()
 
         // JOY buttons and axis PUBLISHER
         if(button_states_pubs_map.count(cur_sn) == 0){
-          button_states_pubs_map[cur_sn] = nh_.advertise<sensor_msgs::Joy>("/vive/controller_"+cur_sn+"/joy", 10);
+          button_states_pubs_map[cur_sn] = nh_.advertise<sensor_msgs::Joy>("/" + ns + "/controller_" +cur_sn+"/joy", 10);
         }
         button_states_pubs_map[cur_sn].publish(joy);
 

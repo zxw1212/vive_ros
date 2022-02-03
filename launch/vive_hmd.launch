@@ -24,8 +24,6 @@
       <remap from="~camera_info_right" to="$(arg image_right_info)" />
     </node>
 
-    
-
   </group>
 </launch>
 

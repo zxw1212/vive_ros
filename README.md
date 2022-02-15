@@ -256,7 +256,22 @@ To set this mode:
 <h2 id="troubleshoot"> :gear: Troubleshoot</h2>
 
   A list of the most common problems found during installation and usage:
+  
+  - **You are missing the following 32-bit libraries, and Steam may not run: libc.so.6**
+    Try this:
+     ```sh
+     udo apt-get install libc6-i386
+     ```
 
+
+    - **  You are missing the following 32-bit libraries, and Steam may not run:
+libGL.so.1
+libdrm.so.2
+libdrm.so.2
+libdrm.so.2**
+    Try this:
+     ```sh
+      sudo apt install libgl1-mesa-dri:i386 libgl1:i386
   - **SteamVR Fail: Error 307**
 
     SteamVR takes the wrong Vulkan implementation. Try this:

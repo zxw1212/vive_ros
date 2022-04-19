@@ -51,7 +51,7 @@
 - VR-Ready GPU (>= Scheda grafica NVIDIA GeForce RTX 2070 Max-Q in our case)
   
 **System Requirements:**
-- OS: Ubuntu 20.04 lts
+- OS: Ubuntu 20.04 lts, kernel: 5.11.0-27-generic
 - Nvidia GPU Drivers : >=470.57.02
 - Compiler: cmake C/CXX GNU 7.5.0
 - Framework: Ros Noetic   
@@ -60,7 +60,7 @@
 - libglew-dev
 - OpenVR : 1.3.22
 - Steam API: v020 | package version: 1647446817
-- SteamVR : 1.22.6 Beta version 
+- SteamVR : 1.22.6 Beta version or 1.21.12
   
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -151,6 +151,7 @@
 <!-- USAGE -->
 <h2 id="usage"> :gear: Usage</h2>
 
+- ### [ATTENTION] Disconnect all the HMD cable from the computer before to turn it on, this is to avoid the pc and steamVR to recognize the HMD as an external monitor and trigger the extended display mode. We want our HMD to be in direct mode.
 - ### Launch ROS nodes:
 
     1. #### Start roscore:
@@ -223,8 +224,15 @@ To set this mode:
 
   A list of the most common problems found during installation and usage:
   
-  - **You are missing the following 32-bit libraries, and Steam may not run: libc.so.6**
+  - **The system is using vulkan driver for the wrong graphic card, Force the system to use nvidia graphic card**
     SteamVR takes the wrong Vulkan implementation. Try this:
      ```sh
      sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled
      ```
+
+  - **SteamVR use extended mode instead of direct mode**
+    1) Disconnect the HMD reboot the system, launch Steam, connect the HMD, launch SteamVR again.
+    2) Check SteamVR is in the right version. To switch to 1.22.6 beta version: open Steam, go into library, right click on SteamVR icon, select properties, then in the BETA panel(select on the left side), search for beta
+    3) Check the ubuntu 20 kernel version running "uname -r" inside a terminal. If the kernel version is not 5.11.0-27-generic try to reboot the system and select the right kernel when booting the os.
+  - **After selecting Ubuntu 20 in the grub the computer get stuck with black screen and blinking cursor on top-left side of the screen**
+    1) Press ctrl+alt+F3 to open a terminal, insert your credentials if needed, use the command "sudo service gdm3 restart"

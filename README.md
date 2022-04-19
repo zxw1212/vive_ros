@@ -51,16 +51,16 @@
 - VR-Ready GPU (>= Scheda grafica NVIDIA GeForce RTX 2070 Max-Q in our case)
   
 **System Requirements:**
-- OS: Ubuntu 18.04 lts
-- Nvidia GPU Drivers : >=460.39
+- OS: Ubuntu 20.04 lts
+- Nvidia GPU Drivers : >=470.57.02
 - Compiler: cmake C/CXX GNU 7.5.0
-- Framework: Ros Melodic   
+- Framework: Ros Noetic   
   
 **Software requirements:**
 - libglew-dev
 - OpenVR : 1.3.22
-- Steam : 1.0.0.68
-- SteamVR : 1.16.8 
+- Steam API: v020 | package version: 1647446817
+- SteamVR : 1.22.6 Beta version 
   
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -71,8 +71,8 @@
     . 
     |
     ├── conf
-    │   ├── pilot_index.yaml
-    │   └── pilot_vive.yaml
+    │   ├── index_param.yaml
+    │   └── vive_param.yaml
     |
     ├── images
     │   ├── controller_frame.jpg
@@ -95,8 +95,8 @@
     │   ├── vive_hmd.cpp
     |   └── vr_interface.cpp
     |
+    ├── CMakeLists.txt
     ├── LICENSE
-    ├── 60-HTC-Vive-perms.rules
     ├── package.xml
     └── README.md
 
@@ -128,62 +128,28 @@
        $ cmake -DCMAKE_BUILD_TYPE=Release ../
        $ make
        ```
-  
+
+- ### Steam and SteamVR installation:
+    1. #### Download [Steam](https://store.steampowered.com) latest version. You should get the file steam_latest.deb in your ~/Downloads folder
+    2. #### Run Steam 
+       ```sh
+       $ sudo apt install steam
+       ```
+    3. #### Setup or log in into your Steam account and install SteamVR from the Steam store
+
 - ### Install ROS package:
-    1. #### Install additional ROS libraries
-       ```sh 
-       $ sudo apt-get install ros-melodic-tf -y
-       $ sudo apt-get install ros-melodic-tf2* -y
-       ``` 
-    2. #### Install `vive_ros` package in the catkin_ws
+    1. #### Install `vive_ros` package in the catkin_ws
        ```sh 
        $ cd ~/catkin_ws/src
        $ git clone https://github.com/JOiiNT-LAB/vive_ros.git
        $ cd ..
        $ catkin_make
        ```
-    3. #### Add rules for the Vive devices:
-       ```sh 
-       $ cd ~/catkin_ws/src/vive_ros
-       $ sudo cp ./60-HTC-Vive-perms.rules /etc/udev/rules.d
-       $ sudo udevadm --reload-rules && sudo udevadm trigger
-       ```               
-- ### Steam and SteamVR installation:
-    1. #### Download [Steam](https://store.steampowered.com) latest version. You should get the file steam_latest.deb in your ~/Downloads folder
-    2. #### Run Steam 
-       ```sh
-       $ sudo dpkg --install ~/Downloads/steam_latest.deb
-       $ steam
-       ```
-    3. #### Setup or log in into your Steam account and install SteamVR from the Steam store
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <!-- USAGE -->
 <h2 id="usage"> :gear: Usage</h2>
-
-- ### Steam and VR-set preparation
-
-    1. #### Plug-in HTC Vive Base Stations:
-
-        a) Single base mode: select mode "a" with the button behind the base station
-
-        b) Double base mode: select mode "b" on the first base and "c" on the second one, ensure the space between the two base stations
-          is free.
-
-    2. #### Plug-in and turn on the VR-set
-
-    3. #### Run the following commands in the terminal to give read/write permission for the HMD: 
-        ```bash
-        $ sudo chmod a+rw /dev/hidraw*
-        ```
-    4. Start Steam client
-      
-    5. Start SteamVR from Steam client
-
-    6. Check if the HMD is inside the point of view of the stations and it is tracked by the stations
-
-    7. Pair the Joypads, check if they are tracked by the stations
 
 - ### Launch ROS nodes:
 
@@ -258,22 +224,6 @@ To set this mode:
   A list of the most common problems found during installation and usage:
   
   - **You are missing the following 32-bit libraries, and Steam may not run: libc.so.6**
-    Try this:
-     ```sh
-     udo apt-get install libc6-i386
-     ```
-
-
-    - **  You are missing the following 32-bit libraries, and Steam may not run:
-libGL.so.1
-libdrm.so.2
-libdrm.so.2
-libdrm.so.2**
-    Try this:
-     ```sh
-      sudo apt install libgl1-mesa-dri:i386 libgl1:i386
-  - **SteamVR Fail: Error 307**
-
     SteamVR takes the wrong Vulkan implementation. Try this:
      ```sh
      sudo mv /usr/share/vulkan/icd.d/intel_icd.x86_64.json /usr/share/vulkan/icd.d/intel_icd.x86_64.json.disabled

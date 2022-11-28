@@ -136,6 +136,15 @@
        $ sudo apt install steam
        ```
     3. #### Setup or log in into your Steam account and install SteamVR from the Steam store
+    
+    4. #### Set the computer to use only nvidia gpu in performance mode:
+       ```sh
+       $ sudo prime-select nvidia
+       ```
+    5. #### Remove libcurl from ~/.steam folder 
+       ```sh
+       $ sudo rm -r ~/.steam/steam/ubuntu12_32/steam-runtime/usr/lib/x86_64-linux-gnu/libcurl* 
+       ```
 
 - ### Install ROS package:
     1. #### Install `vive_ros` package in the catkin_ws

@@ -218,14 +218,16 @@ To set this mode:
 
   4. Add the line ```"forcedDriver": "null"``` beneath it.
 
-  5. Open ```default.vrsettings```
+  5. Add the line  ```"enableHomeApp" : false```
+
+  6. Open ```default.vrsettings```
       ```sh
         $ gedit ~/.steam/steam/steamapps/common/SteamVR/drivers/null/resources/settings/default.vrsettings
       ```
 
-  6. Set ```"enable": true``` to enable it.
+  7. Set ```"enable": true``` to enable it.
 
-  7. Now launch Steam and SteamVR and then the nodes as already explained.
+  8. Now launch Steam and SteamVR and then the nodes as already explained.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 

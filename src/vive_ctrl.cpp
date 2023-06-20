@@ -44,6 +44,7 @@ class VIVEnode
     ros::ServiceServer                            set_origin_server_;
     std::map<std::string, ros::Publisher>         button_states_pubs_map;
     std::map<std::string, ros::Publisher>         joystick_pose_pubs_map;
+    std::map<std::string, ros::Publisher>         tracker_pose_pubs_map;
     ros::Publisher                                hmd_pose;
     ros::Publisher                                tracker_pose;
     ros::Publisher                                lighthouse_pose;
@@ -260,6 +261,14 @@ void VIVEnode::Run()
       // It's a tracker
       if (dev_type == 3)
       {
+
+        // TRACKER pose PUBLISHER
+        if(tracker_pose_pubs_map.count(cur_sn) == 0){
+          tracker_pose_pubs_map[cur_sn] = nh_.advertise<geometry_msgs::PoseStamped>("/" + ns + "/tracker_" + cur_sn + "_as_posestamped", 10);
+        }
+        pose_msg.header.stamp = ros::Time::now();
+        tracker_pose_pubs_map[cur_sn].publish(pose_msg);
+
         tf_broadcaster_.sendTransform(tf::StampedTransform(tf, ros::Time::now(), "world", "tracker_"+cur_sn));
       }
       // It's a lighthouse

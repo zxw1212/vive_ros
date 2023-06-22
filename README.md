@@ -202,6 +202,25 @@
   
     ![Alt text](images/controller_frame.jpg?raw=true "lighthouse frame")
 
+- ### Using Vive Trackers:
+
+The vive_ctrl node can retrieve the pose even from the Vive Trackers BUT it is fundamental to setup the trackers properly:
+
+  1. For every Vive Tracker you want to use, connect the corresponding bluetooth dongle to the computer
+
+  2. Start Steam and SteamVR
+
+  3. Go inside SteamVR menù then select: devices->pair_controllers
+
+  4. Follow the instructions on screen
+
+  5. Go inside SteamVR menu then select: devices->manage_trackers
+
+  6. Set a role for every tracker
+
+  7. Pay attention! If you select "Held in hand" you will not be able to use the controllers together with your Vive trackers
+
+
 - ### Controllers tracking without HMD:
 
 It is possible to use track the controllers without connecting the HMD, but the controllers must be connected via USB.

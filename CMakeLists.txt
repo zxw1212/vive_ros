@@ -77,14 +77,30 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf
   std_srvs
+  std_msgs
   geometry_msgs
   cv_bridge
   image_transport
+  message_generation
 )
 
 set(CMAKE_BUILD_TYPE "Release")
 
-catkin_package()
+add_message_files(
+  FILES
+  devices.msg
+)
+
+add_service_files(
+  FILES
+  list_devices.srv
+)
+
+generate_messages(DEPENDENCIES std_msgs)
+
+catkin_package(CATKIN_DEPENDS message_runtime)
+
+
 
 include_directories(
   include

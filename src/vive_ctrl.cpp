@@ -240,7 +240,7 @@ void VIVEnode::Run()
       // It's a HMD
       if (dev_type == 1)
       {
-        devices.hmd.push_back(ns + "hmd_" + cur_sn);
+        devices.hmd.push_back(ns + "/hmd_" + cur_sn);
         tf_broadcaster_.sendTransform(tf::StampedTransform(tf, ros::Time::now(), "world", "hmd"));
         hmd_pose = nh_.advertise<geometry_msgs::PoseStamped>("/" + ns + "/hmd_as_posestamped", 10); // assegnamento ad ogni ciclo, si può tirare fuori
         hmd_pose.publish(pose_msg);

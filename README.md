@@ -106,7 +106,7 @@
 <h2 id="installation"> :woman_technologist: Installation</h2>
 
 - ### `GLEW` OpenGL Extension Wrangler library installation:
-       ```sh
+       ```
        $ sudo apt update
        $ sudo apt install libglew-dev
        ```

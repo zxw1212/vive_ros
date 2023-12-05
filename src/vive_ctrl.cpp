@@ -47,6 +47,7 @@ private:
   ros::Rate loop_rate_;
   std::vector<double> world_offset_;
   double world_yaw_;
+  double joy_pitch_deg;
   tf::TransformBroadcaster tf_broadcaster_;
   // ros::ServiceServer set_origin_server_;
   ros::ServiceServer list_devices_server_;
@@ -68,6 +69,7 @@ VIVEnode::VIVEnode(int rate)
 {
   nh_.getParam("/vive/world_offset", world_offset_);
   nh_.getParam("/vive/world_yaw", world_yaw_);
+  nh_.getParam("/vive/joy_pitch_deg", joy_pitch_deg);
   // ROS_INFO(" [VIVE] World offset: [%2.3f , %2.3f, %2.3f] %2.3f", world_offset_[0], world_offset_[1], world_offset_[2], world_yaw_);
   // set_origin_server_ = nh_.advertiseService("/vive/set_origin", &VIVEnode::setOriginCB, this);
   // list_devices_server_ = nh_.advertiseService("list_devices", &VIVEnode::listDevicesCB, this);
@@ -248,8 +250,36 @@ void VIVEnode::Run()
       // It's a controller
       else if (dev_type == 2)
       {
-        devices.controller.push_back(ns + "/controller_" + cur_sn);
+        ////////////// Add offset rotation for the joystick ////////////////////
+        tf::Quaternion quat;
+        tf::Matrix3x3 rot_matrix = tf.getBasis();
+        double theta_offset = joy_pitch_deg*M_PI/180;
+        
+        tf::Matrix3x3 offset_matrix(  cos(theta_offset),  0,  sin(theta_offset),
+                                      0,                  1,                  0,
+                                      -sin(theta_offset), 0,  cos(theta_offset)); //+60 deg rotation along y
 
+                                                                   
+        rot_matrix = rot_matrix*offset_matrix;
+        rot_matrix.getRotation(quat);
+        tf.setRotation(quat);
+
+        pose_msg.header.stamp = ros::Time::now();
+        pose_msg.header.frame_id = "world";
+
+        pose_msg.pose.position.x = tf.getOrigin().x();
+        pose_msg.pose.position.y = tf.getOrigin().y();
+        pose_msg.pose.position.z = tf.getOrigin().z();
+
+        pose_msg.pose.orientation.x = quat[0];
+        pose_msg.pose.orientation.y = quat[1];
+        pose_msg.pose.orientation.z = quat[2];
+        pose_msg.pose.orientation.w = quat[3];
+        /////////////////////////////////////////////////////////
+
+
+
+        devices.controller.push_back(ns + "/controller_" + cur_sn);
         // tracker
         tf_broadcaster_.sendTransform(tf::StampedTransform(tf, ros::Time::now(), "world", "controller_" + cur_sn));
 

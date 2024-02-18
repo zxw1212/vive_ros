@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
-  <rosparam param="/vive/world_offset">[0, 0, 0]</rosparam>
+  <rosparam param="/vive/world_offset">[-1.6, 0.35, 1.25]</rosparam>
   <rosparam param="/vive/world_yaw">0.0</rosparam>
-  <rosparam param="/vive/joy_pitch_deg">60</rosparam>
+  <rosparam param="/vive/joy_roll_deg">0</rosparam>
+  <rosparam param="/vive/joy_pitch_deg">180</rosparam>
+  <rosparam param="/vive/joy_yaw_deg">180</rosparam>
 
   <node name="vive_ctrl" pkg="vive_ros" type="vive_ctrl" launch-prefix="$(env HOME)/.steam/steam/ubuntu12_32/steam-runtime/run.sh" output="screen" required="true"/>
 
 </launch>
-
-

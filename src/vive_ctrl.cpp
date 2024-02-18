@@ -47,7 +47,9 @@ private:
   ros::Rate loop_rate_;
   std::vector<double> world_offset_;
   double world_yaw_;
+  double joy_roll_deg;
   double joy_pitch_deg;
+  double joy_yaw_deg;
   tf::TransformBroadcaster tf_broadcaster_;
   // ros::ServiceServer set_origin_server_;
   ros::ServiceServer list_devices_server_;
@@ -69,7 +71,13 @@ VIVEnode::VIVEnode(int rate)
 {
   nh_.getParam("/vive/world_offset", world_offset_);
   nh_.getParam("/vive/world_yaw", world_yaw_);
+  nh_.getParam("/vive/joy_roll_deg", joy_roll_deg);
   nh_.getParam("/vive/joy_pitch_deg", joy_pitch_deg);
+  nh_.getParam("/vive/joy_yaw_deg", joy_yaw_deg);
+  std::cout << "--------------joy frame offset--------------\n" 
+            << "joy_yaw_deg: " << joy_yaw_deg << "\n"
+            << "joy_pitch_deg: " << joy_pitch_deg << "\n"
+            << "joy_roll_deg: " << joy_roll_deg << std::endl;
   // ROS_INFO(" [VIVE] World offset: [%2.3f , %2.3f, %2.3f] %2.3f", world_offset_[0], world_offset_[1], world_offset_[2], world_yaw_);
   // set_origin_server_ = nh_.advertiseService("/vive/set_origin", &VIVEnode::setOriginCB, this);
   // list_devices_server_ = nh_.advertiseService("list_devices", &VIVEnode::listDevicesCB, this);
@@ -253,19 +261,33 @@ void VIVEnode::Run()
         ////////////// Add offset rotation for the joystick ////////////////////
         tf::Quaternion quat;
         tf::Matrix3x3 rot_matrix = tf.getBasis();
-        double theta_offset = joy_pitch_deg*M_PI/180;
+        double theta_offset_r = joy_roll_deg*M_PI/180;
+        double theta_offset_p = joy_pitch_deg*M_PI/180;
+        double theta_offset_y = joy_yaw_deg*M_PI/180;
         
-        tf::Matrix3x3 offset_matrix(  cos(theta_offset),  0,  sin(theta_offset),
-                                      0,                  1,                  0,
-                                      -sin(theta_offset), 0,  cos(theta_offset)); //+60 deg rotation along y
+        tf::Matrix3x3 offset_matrix_r(1,  0,  0,
+                                      0,  cos(theta_offset_r),  -sin(theta_offset_r),
+                                      0,  sin(theta_offset_r),  cos(theta_offset_r));
+        tf::Matrix3x3 offset_matrix_p(cos(theta_offset_p),  0,  sin(theta_offset_p),
+                                      0,  1,  0,
+                                      -sin(theta_offset_p), 0,  cos(theta_offset_p));
+        tf::Matrix3x3 offset_matrix_y(cos(theta_offset_y),  -sin(theta_offset_y), 0,
+                                      sin(theta_offset_y), cos(theta_offset_y), 0,
+                                      0,  0,  1);
 
                                                                    
-        rot_matrix = rot_matrix*offset_matrix;
+        rot_matrix = rot_matrix * (offset_matrix_y * offset_matrix_p * offset_matrix_r);
         rot_matrix.getRotation(quat);
         tf.setRotation(quat);
 
         pose_msg.header.stamp = ros::Time::now();
         pose_msg.header.frame_id = "world";
+
+        // shift the pose
+        tf::Vector3 position = tf.getOrigin();
+        tf::Vector3 offset(world_offset_[0], world_offset_[1], world_offset_[2]);
+        tf::Vector3 new_position = position + offset;
+        tf.setOrigin(new_position);
 
         pose_msg.pose.position.x = tf.getOrigin().x();
         pose_msg.pose.position.y = tf.getOrigin().y();
@@ -311,13 +333,22 @@ void VIVEnode::Run()
         }
         button_states_pubs_map[cur_sn].publish(joy);
 
-        // JOY pose PUBLISHER
+        // JOY pose PUBLISHER：PoseStamped
         if (joystick_pose_pubs_map.count(cur_sn) == 0)
         {
           joystick_pose_pubs_map[cur_sn] = nh_.advertise<geometry_msgs::PoseStamped>("/" + ns + "/controller_" + cur_sn + "_as_posestamped", 10);
         }
         pose_msg.header.stamp = ros::Time::now();
         joystick_pose_pubs_map[cur_sn].publish(pose_msg);
+
+        // JOY pose PUBLISHER：Pose
+        if (joystick_pose_pubs_map.count(cur_sn) != 0)
+        {
+          joystick_pose_pubs_map[cur_sn+"_"] = nh_.advertise<geometry_msgs::Pose>("/" + ns + "/controller_" + cur_sn + "_as_pose", 10);
+        }
+        geometry_msgs::Pose pure_pose_msg;
+        pure_pose_msg = pose_msg.pose;
+        joystick_pose_pubs_map[cur_sn+"_"].publish(pure_pose_msg);
       }
       // It's a tracker
       if (dev_type == 3)
@@ -374,7 +405,8 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "vive_node");
 
-  VIVEnode nodeApp(90); // VIVE display max fps
+  // VIVEnode nodeApp(90); // VIVE display max fps
+  VIVEnode nodeApp(500); // VIVE display max fps
   if (!nodeApp.Init())
   {
     nodeApp.Shutdown();
